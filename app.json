@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "wekip-mobile-app",
-    "slug": "wekip-mobile-app",
+    "name": "Wekip",
+    "slug": "wekip",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

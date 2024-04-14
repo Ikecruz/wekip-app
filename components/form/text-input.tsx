@@ -1,9 +1,8 @@
-import Colors from "@/src/constants/Colors"
-import Typography from "@/src/constants/Typography"
+import Colors from "@/constants/Colors"
+import Typography from "@/constants/Typography"
 import { forwardRef, useRef } from "react"
 import { Text, TextInput as DefaultTextInput, TextInputProps, TextStyle, StyleSheet, View } from "react-native"
 import { InputProps } from "."
-import { formatter } from "@/src/utils"
 import { TouchableOpacity } from "react-native"
 
 interface Props extends InputProps {
@@ -23,7 +22,6 @@ export const TextInput = forwardRef<DefaultTextInput, Props>(
             icon,
             style,
             containerStyle,
-            balance,
             rightComponent,
             editable,
             ...otherProps
@@ -55,12 +53,6 @@ export const TextInput = forwardRef<DefaultTextInput, Props>(
                         />
                         {rightComponent}
                     </View>
-                    {
-                        balance !== undefined &&
-                        <View style={styles.balance_contain}>
-                            <Text style={styles.balance_text}>Balance: {formatter.format(Number(balance))}</Text>
-                        </View>
-                    }
                 </View>
                 {error && <Text style={[styles.errorText, labelStyle]}>{error}</Text>}
             </View>

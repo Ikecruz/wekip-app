@@ -1,5 +1,5 @@
-import Colors from "@/src/constants/Colors"
-import Typography from "@/src/constants/Typography"
+import Colors from "@/constants/Colors"
+import Typography from "@/constants/Typography"
 import { forwardRef } from "react"
 import { ActivityIndicator, Button as NativeButton, StyleSheet, Text, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewStyle } from "react-native"
 
@@ -86,11 +86,11 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     filled: {
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.night,
     },
     outline: {
         borderWidth: 2,
-        borderColor: Colors.blue,
+        borderColor: Colors.night,
         borderStyle: "solid",
         paddingHorizontal: 43,
         paddingVertical: 10,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         color: "white"
     },
     text_outline: {
-        color: Colors.blue
+        color: Colors.night
     },
     text_subtle: {},
     compact: {

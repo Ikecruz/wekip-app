@@ -1,4 +1,4 @@
-import Colors from "@/src/constants/Colors";
+import Colors from "@/constants/Colors";
 import { forwardRef } from "react";
 import { ActivityIndicator, StyleSheet, TouchableOpacity, TouchableOpacityProps } from "react-native";
 
@@ -17,7 +17,7 @@ export const ActionIcon = forwardRef<TouchableOpacity, Props>(
             <TouchableOpacity style={[styles.button, compact && {width: "auto"}]} ref={ref} {...otherProps}>
                 { 
                     loading ?
-                    <ActivityIndicator color={Colors.blue} /> :
+                    <ActivityIndicator color={Colors.night} /> :
                     children
                 }
             </TouchableOpacity>

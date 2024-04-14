@@ -68,8 +68,8 @@ function RootLayoutNav() {
 
     <StatusBar backgroundColor="white" barStyle="dark-content" translucent={true} />
 
-    {/* <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="transaction/[json]" options={{ presentation: "modal" }} />
-    </Stack> */}
+    <Stack screenOptions={{ headerShown: false }}>
+      {/* <Stack.Screen name="transaction/[json]" options={{ presentation: "modal" }} /> */}
+    </Stack>
   </>
 }

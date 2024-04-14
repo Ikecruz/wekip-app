@@ -45,7 +45,7 @@ export default function Register() {
     const { mutate: register, isPending } = useMutation<unknown, AxiosResponse<AxiosResponseMessage>, FormData, unknown>({
         retry: 0,
         mutationFn: async ({ confirmPassword, ...body }: FormData) => await makePublicApiCall({
-            url: "/auth/signup",
+            url: "/auth/user/register",
             method: "POST",
             body
         }),

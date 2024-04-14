@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = ""
+const URL = "https://wekip-backend.onrender.com/api/v1"
 
 export interface PrivateRequestProps {
     token: string;

@@ -14,9 +14,10 @@ import { z } from "zod";
 import validator from "validator";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect } from "react";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { router } from "expo-router";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
+import { AxiosResponseMessage } from "@/services/axios.service";
 
 interface FormData {
     email: string;
@@ -27,24 +28,22 @@ export default function Login() {
 
     const { signIn } = useAuth()
 
-    const { mutate, isPending } = useMutation({
+    const { mutate, isPending } = useMutation<unknown, AxiosResponse<AxiosResponseMessage>, FormData, unknown>({
         retry: 0,
         mutationFn: async (loginObj: FormData) => await makePublicApiCall({
-            url: "/auth/login",
+            url: "/auth/user/login",
             method: "POST",
             body: loginObj
         }),
         onError: (error, variables) => {
-            if (error instanceof AxiosError) {
-                if (error.response?.data.message === "Email not verified") {
-                    router.replace(`/(auth)/verify-email/${variables.email}`)
-                    return;
-                }
-                Toast.show({
-                    type: ALERT_TYPE.WARNING,
-                    title: 'Email not verified',
-                })
+            if (error.data.message === "Email not verified") {
+                router.replace(`/(auth)/verify-email/${variables.email}`)
+                return;
             }
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: error.data.message,
+            })
         },
         onSuccess: (response: any) => {
             signIn({

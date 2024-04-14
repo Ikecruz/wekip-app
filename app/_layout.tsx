@@ -1,12 +1,14 @@
 import { useFonts } from "expo-font";
 import { Slot, SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { StatusBar } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 import { AuthProvider, useAuth } from "../contexts/auth.context";
 // import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { SnackbarProvider } from "../contexts/snackbar.context";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { AlertNotificationRoot } from "react-native-alert-notification";
+import Typography from "@/constants/Typography";
 // import { ClipboardProvider } from "../contexts/clipboard.context";
 // import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -51,7 +53,9 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <SafeAreaProvider>
-          <RootLayoutNav />
+          <AlertNotificationRoot toastConfig={{titleStyle: styles.toast_title, textBodyStyle: styles.toast_body}}>
+            <RootLayoutNav />
+          </AlertNotificationRoot>
         </SafeAreaProvider>
       </AuthProvider>
     </QueryClientProvider>
@@ -73,3 +77,14 @@ function RootLayoutNav() {
     </Stack>
   </>
 }
+
+const styles = StyleSheet.create({
+  toast_title: {
+    fontFamily: Typography.content.fontFamily.bold,
+    fontSize: Typography.content.size.small
+  },
+  toast_body: {
+    fontFamily: Typography.content.fontFamily.regular,
+    fontSize: Typography.content.size.small - 2
+  }
+})

@@ -1,3 +1,5 @@
+import { Buffer } from "buffer";
+
 export const decodeData = (data: string) => {
     return JSON.parse(Buffer.from(data, 'base64').toString('utf8'));
 }

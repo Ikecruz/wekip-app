@@ -5,7 +5,7 @@ import Colors from "@/constants/Colors";
 import Typography from "@/constants/Typography";
 import { useAuth } from "@/contexts/auth.context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Link, Stack, useRouter } from "expo-router";
+import { Link, Stack, router, useRouter } from "expo-router";
 import { KeyboardAvoidingView, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import * as WebBrowser from "expo-web-browser"
 import validator from "validator";
@@ -29,12 +29,9 @@ interface FormData {
 
 interface EmailVerificationObject {
     email: string;
-    verification_key: string
 }
 
 export default function Register() {
-
-    const router = useRouter()
 
     const openExternalLink = async (url: string) => {
         await WebBrowser.openBrowserAsync(url, {
@@ -63,7 +60,6 @@ export default function Register() {
 
             const verificationObject: EmailVerificationObject = {
                 email: variables.email,
-                verification_key: response.verification_key,
             }
 
             router.push(`/(auth)/verify-email/${encodeData(verificationObject)}`)

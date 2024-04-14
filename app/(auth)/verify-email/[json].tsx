@@ -23,12 +23,10 @@ interface ResendForm {
 interface VerifyForm {
     email: string;
     otp: string;
-    verification_key: string
 }
 
 interface EmailVerificationObject {
     email: string;
-    verification_key: string
 }
 
 export default function VerifyEmail() {
@@ -56,7 +54,6 @@ export default function VerifyEmail() {
             })
         },
         onSuccess: (response: any, variables) => {
-            setValue("verification_key", response.verification_key)
             Toast.show({
                 type: ALERT_TYPE.SUCCESS,
                 title: "OTP resent successfully",
@@ -96,7 +93,6 @@ export default function VerifyEmail() {
         resolver: zodResolver(schema),
         defaultValues: {
             email: verificationObject.email,
-            verification_key: verificationObject.verification_key
         }
     })
 

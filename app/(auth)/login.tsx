@@ -18,6 +18,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { router } from "expo-router";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { AxiosResponseMessage } from "@/services/axios.service";
+import { encodeData } from "@/services/utils.service";
 
 interface FormData {
     email: string;
@@ -37,7 +38,7 @@ export default function Login() {
         }),
         onError: (error, variables) => {
             if (error.data.message === "Email not verified") {
-                router.replace(`/(auth)/verify-email/${variables.email}`)
+                router.replace(`/(auth)/verify-email/${encodeData({email: variables.email})}`)
                 return;
             }
             Toast.show({

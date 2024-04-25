@@ -48,9 +48,9 @@ export default function Login() {
         },
         onSuccess: (response: any) => {
             signIn({
-                email: response.data.user.email,
-                username: response.data.user.username,
-                token: response.data.token,
+                email: response.user.email,
+                username: response.user.username,
+                token: response.token,
             })
             router.push(`/(tabs)/`)
         }

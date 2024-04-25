@@ -19,7 +19,7 @@ import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 
 interface FormData {
     email: string;
-    otp: string;
+    token: string;
     password: string;
     step: number;
     confirmPassword: string;
@@ -34,7 +34,7 @@ export default function ForgotPassword() {
     const { mutate: sendOtp, isPending: sendOtpIsLoading } = useMutation<unknown, AxiosResponse<AxiosResponseMessage>, ResendForm, unknown>({
         retry: 0,
         mutationFn: async (body: ResendForm) => await makePublicApiCall({
-            url: "/auth/get_otp",
+            url: "/auth/forgot-password",
             method: "POST",
             body
         }),
@@ -56,7 +56,7 @@ export default function ForgotPassword() {
     const { mutate: resetPassword, isPending } = useMutation<unknown, AxiosResponse<AxiosResponseMessage>, FormData, unknown>({
         retry: 0,
         mutationFn: async ({ step, confirmPassword, ...body }: FormData) => await makePublicApiCall({
-            url: "/auth/reset_password",
+            url: "/auth/change-password",
             method: "POST",
             body
         }),
@@ -186,14 +186,14 @@ export default function ForgotPassword() {
                                             render={({ field: { onBlur, onChange, value } }) => (
                                                 <TextInput
                                                     placeholder="Otp"
-                                                    error={errors.otp?.message}
+                                                    error={errors.token?.message}
                                                     value={value}
                                                     autoCorrect={false}
                                                     onChangeText={onChange}
                                                     onBlur={onBlur}
                                                 />
                                             )}
-                                            name="otp"
+                                            name="token"
 
                                         />
                                         <Controller

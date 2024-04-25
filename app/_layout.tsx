@@ -3,14 +3,12 @@ import { Slot, SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { StatusBar, StyleSheet } from "react-native";
 import { AuthProvider, useAuth } from "../contexts/auth.context";
-// import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { SnackbarProvider } from "../contexts/snackbar.context";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Typography from "@/constants/Typography";
+import { WekipProvider } from "@/contexts/wekip.context";
 // import { ClipboardProvider } from "../contexts/clipboard.context";
-// import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -54,7 +52,9 @@ export default function RootLayout() {
       <AuthProvider>
         <SafeAreaProvider>
           <AlertNotificationRoot toastConfig={{titleStyle: styles.toast_title, textBodyStyle: styles.toast_body}}>
-            <RootLayoutNav />
+            <WekipProvider>
+              <RootLayoutNav />
+            </WekipProvider>
           </AlertNotificationRoot>
         </SafeAreaProvider>
       </AuthProvider>

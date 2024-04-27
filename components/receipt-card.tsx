@@ -2,7 +2,7 @@ import Colors from "@/constants/Colors";
 import Typography from "@/constants/Typography";
 import { GroupedReceipt, Receipt } from "@/interfaces/receipts.interface";
 import React, { forwardRef } from "react";
-import { Image, StyleSheet, Text, View, ViewProps } from "react-native";
+import { Image, Linking, StyleSheet, Text, View, ViewProps } from "react-native";
 import { encodeData } from "@/services/utils.service";
 import moment from "moment";
 import { TouchableOpacity } from "react-native";
@@ -16,7 +16,18 @@ interface SingleProps extends ViewProps {
     receipt: Receipt
 }
 
-export const SingleTransaction = forwardRef<View, SingleProps>(
+const openUrl = async (url: string) => {
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      console.log(`Don't know how to open this URL: ${url}`);
+    }
+  
+}
+
+export const SingleReceipt = forwardRef<View, SingleProps>(
     (props, ref): React.ReactElement => {
 
         const { receipt } = props
@@ -24,7 +35,7 @@ export const SingleTransaction = forwardRef<View, SingleProps>(
         const router = useRouter()
 
         return (
-            <TouchableOpacity activeOpacity={0.7} /* onPress={() => router.push(`/transaction/${encodeData(receipt)}`)} */>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => openUrl(receipt.file_path)} >
                 <View style={styles.single}>
                     <Image
                         source={{ uri: receipt.business.logo }}
@@ -65,7 +76,7 @@ export const ReceiptGroupCard = forwardRef<View, Props>(
                 <View style={styles.group}>
                     {
                         receipts.map(receipt => (
-                            <SingleTransaction
+                            <SingleReceipt
                                 receipt={receipt}
                                 key={receipt.id}
                             />

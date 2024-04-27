@@ -19,6 +19,7 @@ import { router } from "expo-router";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import { AxiosResponseMessage } from "@/services/axios.service";
 import { encodeData } from "@/services/utils.service";
+import { useWekip } from "@/contexts/wekip.context";
 
 interface FormData {
     email: string;
@@ -28,13 +29,14 @@ interface FormData {
 export default function Login() {
 
     const { signIn } = useAuth()
+    const { pushToken } = useWekip()
 
     const { mutate, isPending } = useMutation<unknown, AxiosResponse<AxiosResponseMessage>, FormData, unknown>({
         retry: 0,
         mutationFn: async (loginObj: FormData) => await makePublicApiCall({
             url: "/auth/user/login",
             method: "POST",
-            body: loginObj
+            body: {...loginObj, push_token: pushToken}
         }),
         onError: (error, variables) => {
             if (error.data.message === "Email not verified") {

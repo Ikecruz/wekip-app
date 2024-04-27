@@ -68,7 +68,7 @@ export const makePrivateApiCall = async ({
                 url,
                 body
             );
-            resolve(res.data.data)
+            resolve(res.data)
         } catch (error) {
             if (error instanceof AxiosError) {
                 reject(error.response)

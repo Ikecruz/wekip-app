@@ -85,8 +85,7 @@ export default function VerifyEmail() {
 
     const schema = z.object({
         otp: z.string({required_error: "Otp is required"}).length(6, {message: "Enter a valid otp"}),
-        email: z.string(),
-        verification_key: z.string()
+        email: z.string()
     })
 
     const { control, handleSubmit, formState: { errors }, setValue } = useForm<VerifyForm>({
@@ -96,12 +95,15 @@ export default function VerifyEmail() {
         }
     })
 
-    const { mutate: verifyEmail, isPending } = useMutation<unknown, AxiosResponse<AxiosResponseMessage>, ResendForm, unknown>({
+    const { mutate: verifyEmail, isPending } = useMutation<unknown, AxiosResponse<AxiosResponseMessage>, VerifyForm, unknown>({
         retry: 0,
-        mutationFn: async (body: ResendForm) => await makePublicApiCall({
-            url: "/auth/verify_contact",
+        mutationFn: async (body: VerifyForm) => await makePublicApiCall({
+            url: "/auth/verify-email",
             method: "POST",
-            body
+            body: {
+                token: body.otp,
+                group: "user" 
+            }
         }),
         onError: (error, variables) => {
             Toast.show({

@@ -3,89 +3,75 @@ import {SafeView } from "@/components/misc/safe-view";
 import Typography from "@/constants/Typography";
 import Colors from "@/constants/Colors";
 import { ActionIcon, Button } from "@/components/buttons";
-import { Entypo, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-// import { useEonace } from "@/src/contexts/eonace.context";
+import { Entypo, Feather, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useAuth } from "@/contexts/auth.context";
 import { Href, Link, router } from "expo-router";
-// import { TransactionIcon } from "@/src/components/transaction";
-// import { GroupedTransaction, Transaction, TransactionType } from "@/src/interface/transaction.interface";
-// import { BottomSheetModal, TouchableOpacity } from "@gorhom/bottom-sheet";
 import { useQuery } from "@tanstack/react-query";
-// import { makePrivateApiCall } from "@/src/api/api-request";
 import { AxiosError, AxiosResponse } from "axios";
-// import { AxiosResponseMessage } from "@/src/interface/axios.interface";
-// import { PaginatedResult } from "@/src/interface/paginated-result.interface";
-// import { TransactionGroupCard } from "@/src/components/transaction/transaction-card";
-// import { NothingFound } from "@/src/components/feedback/nothing-found";
-// import { User } from "@/src/interface/user.interface";
 import { useEffect, useMemo, useRef } from "react";
+import { AxiosResponseMessage } from "@/services/axios.service";
+import { makePrivateApiCall } from "@/services/api.service";
+import { PaginatedResult } from "@/interfaces/pagination.interface";
+import { GroupedReceipt } from "@/interfaces/receipts.interface";
+import { ReceiptGroupCard } from "@/components/receipt-card";
+import { NothingFound } from "@/components/misc/nothing-found";
 
 export default function HomeScreen() {
 
-    const { authData, signIn, signOut } = useAuth()
+    const { authData, signOut } = useAuth()
 
-    // const {
-    //     data: transactions,
-    //     refetch: refetchTransactions,
-    //     isRefetching: isTransactionRefetching
-    // } = useQuery<unknown, AxiosResponse<AxiosResponseMessage>, PaginatedResult<GroupedTransaction>, any>({
-    //     queryKey: ['getRecentTransactions'],
-    //     queryFn: async () => await makePrivateApiCall({
-    //         url: `/user/transactions?limit=6`,
-    //         method: "GET",
-    //         token: authData!.token,
-    //         signOut
-    //     }),
-    //     refetchOnReconnect: 'always'
-    // })
+    const {
+        data: receipts,
+        refetch: refetchReceipts,
+        isRefetching: isReceiptRefetching
+    } = useQuery<unknown, AxiosResponse<AxiosResponseMessage>, PaginatedResult<GroupedReceipt>, any>({
+        queryKey: ['getRecentReceipts'],
+        queryFn: async () => await makePrivateApiCall({
+            url: `/receipt?limit=6`,
+            method: "GET",
+            token: authData!.token,
+            signOut
+        }),
+        refetchOnReconnect: 'always'
+    })
 
-    // const {
-    //     data: user,
-    //     isSuccess: isUserFetched,
-    //     refetch: refetchUser,
-    //     isRefetching: isUserRefetching
-    // } = useQuery<unknown, AxiosResponse<AxiosResponseMessage>, User, any>({
-    //     queryKey: ['getUser'],
-    //     queryFn: async () => await makePrivateApiCall({
-    //         url: "/user/profile",
-    //         method: "GET",
-    //         token: authData!.token,
-    //         signOut
-    //     }),
-    //     enabled: false
-    // })
+    const {
+        data: stats,
+        isSuccess: isStatsFetched,
+        refetch: refetchStats,
+        isRefetching: isStatsRefetching
+    } = useQuery<unknown, AxiosResponse<AxiosResponseMessage>, any, any>({
+        queryKey: ['getStats'],
+        queryFn: async () => await makePrivateApiCall({
+            url: "/receipt/stats",
+            method: "GET",
+            token: authData!.token,
+            signOut
+        }),
+        // enabled: false
+    })
 
-    // const refetchData = async () => await Promise.all([refetchTransactions(), refetchUser()]);
+    const refetchData = async () => await Promise.all([refetchReceipts(), refetchStats()]);
 
-    // const isRefetching = useMemo(() => {
-    //     if (isUserRefetching && isTransactionRefetching)
-    //         return true
+    const isRefetching = useMemo(() => {
+        if (isStatsRefetching && isReceiptRefetching)
+            return true
 
-    //     return false
-    // }, [isUserRefetching, isTransactionRefetching])
-
-    // useEffect(() => {
-    //     if (isUserFetched) {
-    //         signIn({
-    //             ...authData!,
-    //             account_balance: user.account_balance,
-    //             username: user.username
-    //         })
-    //     }
-    // }, [user])
+        return false
+    }, [isStatsRefetching, isReceiptRefetching])
 
     return <>
         <SafeView>
             <ScrollView
                 style={styles.container}
-                // refreshControl={
-                //     <RefreshControl
-                //         refreshing={isRefetching}
-                //         onRefresh={refetchData}
-                //         tintColor={Colors.dark}
-                //         colors={[Colors.dark]}
-                //     />
-                // }
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefetching}
+                        onRefresh={refetchData}
+                        tintColor={Colors.dark}
+                        colors={[Colors.dark]}
+                    />
+                }
                 contentInset={{
                     bottom: 30,
                     top: 0
@@ -102,6 +88,9 @@ export default function HomeScreen() {
                         <Text style={styles.username}>{authData?.username}</Text>
                         {" "}
                     </Text>
+                    <ActionIcon onPress={signOut}>
+                        <Feather name="power" size={20} color={Colors.dark} />
+                    </ActionIcon>
                 </View>
 
                 <View style={styles.stats_container}>
@@ -109,74 +98,49 @@ export default function HomeScreen() {
                         <Ionicons name="receipt-outline" size={24} color={Colors.dark} />
                         <View style={{gap: 3}}>
                             <Text style={styles.key}>Receipts Saved</Text>
-                            <Text style={styles.value}>0</Text>
+                            <Text style={styles.value}>{stats?.receipts}</Text>
                         </View>
                     </View>
                     <View style={[styles.stats_box, {backgroundColor: Colors.lime + "15"}]}>
                         <MaterialIcons name="business-center" size={24} color={Colors.dark} />
                         <View style={{gap: 3}}>
                             <Text style={styles.key}>Businesses</Text>
-                            <Text style={styles.value}>0</Text>
+                            <Text style={styles.value}>{stats?.businesses}</Text>
                         </View>
                     </View>
                 </View>
 
-                {/* <View style={styles.balance_box}>
-                    <EonaceArrow
-                        height={200}
-                        width={200}
-                        color={Colors.white}
-                        style={styles.balance_box_arrow_1}
-                        opacity={0.08}
-                    />
-                    <EonaceArrow
-                        height={200}
-                        width={200}
-                        color={Colors.white}
-                        style={styles.balance_box_arrow_2}
-                        opacity={0.08}
-                    />
-                    <Text style={styles.available_balance_text}>Available Balance</Text>
-                    <BalanceText privacyMode={privacyMode}>
-                        {formatter.format(parseInt(authData?.account_balance || "0"))}
-                    </BalanceText>
-                    <ActionIcon onPress={changePrivacyMode}>
-                        <Entypo color={Colors.white} name={privacyMode ? "eye" : "eye-with-line"} size={18} />
-                    </ActionIcon>
-                </View> */}
-
-
                 <View style={styles.recent_activities_container}>
                     <View style={styles.recent_activities_name_container}>
                         <Text style={styles.shortcut_header}>Recent Activities</Text>
-                        {/* <Link href="/(tabs)/transactions" asChild>
+                        <Link href="/(tabs)/receipts" asChild>
                             <TouchableOpacity>
                                 <Text style={styles.link}>See all</Text>
                             </TouchableOpacity>
-                        </Link> */}
+                        </Link>
                     </View>
-                    {/* {
-                        transactions && <>
+                    {
+                        receipts && <>
                             {
-                                transactions.results.length > 0 ?
+                                receipts.results.length > 0 ?
                                     <View style={styles.recent_activities}>
                                         {
-                                            transactions.results.map(transactionsGroup => (
-                                                <TransactionGroupCard
-                                                    transactionGroup={transactionsGroup}
-                                                    key={transactionsGroup.date}
+                                            receipts.results.map(receiptsGroup => (
+                                                <ReceiptGroupCard
+                                                    receiptGroup={receiptsGroup}
+                                                    key={receiptsGroup.date}
                                                 />
                                             ))
                                         }
                                     </View> :
                                     <NothingFound
-                                        message="No transaction records for the past year"
-                                        action={() => router.push("/(tabs)/transactions")}
+                                        message="No receipt records for the past year"
+                                        action={() => router.push("/(tabs)/receipts")}
                                         actionPlaceHolder="View More"
                                     />
                             }
                         </>
-                    } */}
+                    }
                 </View>
 
             </ScrollView>

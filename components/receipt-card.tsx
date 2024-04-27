@@ -52,7 +52,7 @@ export const GroupDate = ({
 
 }
 
-export const TransactionGroupCard = forwardRef<View, Props>(
+export const ReceiptGroupCard = forwardRef<View, Props>(
     (props, ref): React.ReactElement => {
 
         const {

@@ -134,8 +134,8 @@ const styles = StyleSheet.create({
         color: Colors.dark
     },
     item_image: {
-        height: 40,
-        width: 40,
+        height: 50,
+        width: 50,
         borderRadius: 100,
         // resizeMode: "fill"
     },
